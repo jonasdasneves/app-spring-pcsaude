@@ -23,8 +23,8 @@ public class Medicao {
 
     // --- Usuário associado ---
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+    @JoinColumn(name = "dispositivo_id", nullable = false)
+    private Dispositivo dispositivo;
 
     @Length(max = 50, message = "A descrição da postura deve ter no máximo 50 caracteres")
     private String postura;
@@ -58,14 +58,14 @@ public class Medicao {
         }
     }
 
-    public Medicao(Usuario usuario,
+    public Medicao(Dispositivo dispositivo,
                    String postura,
                    Integer tempoSentadoMin,
                    BigDecimal iluminacaoLux,
                    BigDecimal temperaturaC,
                    BigDecimal alturaTelaCm) {
 
-        this.usuario = usuario;
+        this.dispositivo = dispositivo;
         this.postura = postura;
         this.tempoSentadoMin = tempoSentadoMin;
         this.iluminacaoLux = iluminacaoLux;

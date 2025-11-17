@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public record MedicaoOutDto(
         Long id,
+        String uuidDispositivo,
         String postura,
         Integer tempoSentadoMin,
         BigDecimal iluminacaoLux,

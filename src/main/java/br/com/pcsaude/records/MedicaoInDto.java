@@ -7,6 +7,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public record MedicaoInDto(
+
+        @Length(max = 50, message = "O uuid do dispositivo deve ter no máximo 50 caracteres")
+        @NotNull(message = "O uuid do dispositivo é obrigatório")
+        String uuidDispositivo,
+
         @Length(max = 50, message = "A descrição da postura deve ter no máximo 50 caracteres")
         String postura,
 
@@ -23,9 +28,6 @@ public record MedicaoInDto(
 
         @Digits(integer = 5, fraction = 2, message = "A altura da tela deve ter até 5 dígitos com 2 casas decimais")
         @DecimalMin(value = "0.0", message = "A altura da tela não pode ser negativa")
-        BigDecimal alturaTelaCm,
-
-        @NotNull(message = "O momento da medição é obrigatório")
-        LocalDateTime momentoMedicao
+        BigDecimal alturaTelaCm
 ) {}
 

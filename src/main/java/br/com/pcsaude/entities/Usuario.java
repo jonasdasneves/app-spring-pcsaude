@@ -61,6 +61,10 @@ public class Usuario {
     @Column(nullable = false, name = "data_cadastro")
     private LocalDate dataCadastro;
 
+    @OneToOne
+    @JoinColumn(name = "dispositivo_id")
+    private Dispositivo dispositivo;
+
     @PrePersist
     public void prePersist() {
         if (this.role == null) {
