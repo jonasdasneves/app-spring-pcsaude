@@ -52,4 +52,8 @@ public class UsuarioService {
 
         return this.repository.save(usuarioOriginal);
     }
+
+    public void delete(Long id){
+        this.repository.deleteById(id);
+    }
 }
