@@ -1,6 +1,6 @@
 package br.com.pcsaude.entities;
 
-import br.com.pcsaude.Enum.GrauAlertaEnum;
+import br.com.pcsaude.enums.GrauAlertaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

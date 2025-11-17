@@ -1,8 +1,8 @@
 package br.com.pcsaude.entities;
 
-import br.com.pcsaude.Enum.ModeloTrabalhoEnum;
-import br.com.pcsaude.Enum.Role;
-import br.com.pcsaude.Enum.SexoEnum;
+import br.com.pcsaude.enums.ModeloTrabalhoEnum;
+import br.com.pcsaude.enums.Role;
+import br.com.pcsaude.enums.SexoEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;

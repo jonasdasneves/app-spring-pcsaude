@@ -1,4 +1,4 @@
-package br.com.pcsaude.Enum;
+package br.com.pcsaude.enums;
 
 public enum GrauAlertaEnum {
     BAIXO,
