@@ -1,15 +1,18 @@
 package br.com.pcsaude.services;
 
 import br.com.pcsaude.entities.Usuario;
+import br.com.pcsaude.exceptions.RecursoNaoPertencenteException;
 import br.com.pcsaude.exceptions.ResourceNotFoundException;
 import br.com.pcsaude.exceptions.UniqueKeyDuplicadaException;
 import br.com.pcsaude.repositories.UsuarioRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 @Service
 public class UsuarioService {
@@ -27,8 +30,17 @@ public class UsuarioService {
     }
 
     public Usuario findById(Long id){
+
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         try {
-            return this.repository.findById(id).orElseThrow();
+            Usuario usuario = this.repository.findById(id).orElseThrow();
+
+            if (!Objects.equals(usuarioLogado.getId(), id)){
+                throw new RecursoNaoPertencenteException("Apenas o usuário pode consultar seu perfil");
+            }
+
+            return usuario;
         }
         catch (NoSuchElementException e){
             throw new ResourceNotFoundException("Não foi possível encontrar um usuário com o id " + id);
@@ -48,11 +60,17 @@ public class UsuarioService {
     }
 
     public Usuario update(Usuario usuario){
+
         Usuario usuarioOriginal = this.findById(usuario.getId());
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (usuarioLogado.getId() != usuarioOriginal.getId()){
+            throw new RecursoNaoPertencenteException("Apenas o usuário pode editar seu perfil");
+        }
 
         usuarioOriginal.setNome(usuario.getNome());
         usuarioOriginal.setEmail(usuario.getEmail());
-        usuarioOriginal.setSenha(usuario.getSenha());
+        usuarioOriginal.setSenha(passwordEncoder.encode(usuario.getSenha()));
         usuarioOriginal.setModeloTrabalho(usuario.getModeloTrabalho());
         usuarioOriginal.setAltura(usuario.getAltura());
         usuarioOriginal.setPeso(usuario.getPeso());
@@ -61,6 +79,13 @@ public class UsuarioService {
     }
 
     public void delete(Long id){
+
+        Usuario usuarioLogado = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!Objects.equals(usuarioLogado.getId(), id)){
+            throw new RecursoNaoPertencenteException("Apenas o usuário pode deletar seu perfil");
+        }
+
         this.repository.deleteById(id);
     }
 }

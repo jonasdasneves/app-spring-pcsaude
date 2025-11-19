@@ -1,5 +1,6 @@
 package br.com.pcsaude.config;
 
+import br.com.pcsaude.exceptions.RecursoNaoPertencenteException;
 import br.com.pcsaude.exceptions.ResourceNotFoundException;
 import br.com.pcsaude.exceptions.UniqueKeyDuplicadaException;
 import lombok.Getter;
@@ -29,6 +30,12 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFoundException(ResourceNotFoundException e) {
+        final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
+        return ResponseEntity.badRequest().body(errorResponse);
+    }
+
+    @ExceptionHandler(RecursoNaoPertencenteException.class)
+    public ResponseEntity<ErrorResponse> handleRecursoNaoPertencenteException(RecursoNaoPertencenteException e) {
         final ErrorResponse errorResponse = new ErrorResponse(e.getMessage());
         return ResponseEntity.badRequest().body(errorResponse);
     }

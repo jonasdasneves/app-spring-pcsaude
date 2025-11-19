@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET,"/error").permitAll()
                         .requestMatchers("/api/alertas/**").hasAnyRole("USER", "PREMIUM")
+                        .requestMatchers(HttpMethod.POST, "/api/medicoes").permitAll()
                         .requestMatchers("/api/medicoes/**").hasAnyRole("USER", "PREMIUM")
                         .requestMatchers("/api/usuario/**").hasAnyRole("USER", "PREMIUM")
                         .requestMatchers("/api/suportes/**").hasAnyRole("USER", "PREMIUM")

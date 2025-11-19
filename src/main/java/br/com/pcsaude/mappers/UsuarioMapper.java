@@ -37,7 +37,6 @@ public class UsuarioMapper {
                 usuario.getId(),
                 usuario.getNome(),
                 usuario.getEmail(),
-                usuario.getSenha(),
                 usuario.getAltura(),
                 usuario.getPeso(),
                 usuario.getSexo(),

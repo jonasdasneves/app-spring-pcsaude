@@ -1,12 +1,16 @@
 package br.com.pcsaude.services;
 
+import br.com.pcsaude.entities.Dispositivo;
 import br.com.pcsaude.entities.Suporte;
 import br.com.pcsaude.entities.Usuario;
 import br.com.pcsaude.enums.SuporteStatusEnum;
+import br.com.pcsaude.exceptions.RecursoNaoPertencenteException;
 import br.com.pcsaude.exceptions.ResourceNotFoundException;
 import br.com.pcsaude.repositories.SuporteRepository;
+import br.com.pcsaude.security.CustomUserDetails;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -15,6 +19,7 @@ import java.util.NoSuchElementException;
 public class SuporteService {
 
     private final SuporteRepository repository;
+
 
     public SuporteService(SuporteRepository repository) {
         this.repository = repository;
@@ -30,8 +35,8 @@ public class SuporteService {
     }
 
     public Page<Suporte> findAll(int page, int size) {
-        //TO DO Usuário deve ser definido por contexto
-        Usuario usuario = new Usuario();
+
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         return this.repository
                 .findAllByUsuario_Id(
@@ -46,9 +51,16 @@ public class SuporteService {
     }
 
     public Suporte cancelar(Long id) {
+
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Suporte suporte = this.findById(id);
 
-        suporte.setStatus(SuporteStatusEnum.CANCELADO);
+        if (suporte.getUsuario().getId() != usuario.getId()) {
+            suporte.setStatus(SuporteStatusEnum.CANCELADO);
+        }
+        else {
+            throw new RecursoNaoPertencenteException("Apenas o dono da requisição de suporte pode cancelá-la");
+        }
 
         return this.repository.save(suporte);
     }

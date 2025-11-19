@@ -1,15 +1,19 @@
 package br.com.pcsaude.controller;
 
+import br.com.pcsaude.entities.Dispositivo;
 import br.com.pcsaude.entities.Suporte;
 import br.com.pcsaude.entities.Usuario;
 import br.com.pcsaude.mappers.MedicaoMapper;
 import br.com.pcsaude.mappers.SuporteMapper;
 import br.com.pcsaude.records.SuporteInDto;
 import br.com.pcsaude.records.SuporteOutDto;
+import br.com.pcsaude.security.CustomUserDetails;
 import br.com.pcsaude.services.SuporteService;
+import br.com.pcsaude.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -49,8 +53,7 @@ public class SuporteController {
     @PostMapping
     public ResponseEntity<SuporteOutDto> save(@Valid @RequestBody SuporteInDto dto) {
 
-        //TO DO Usuário deve ser definido por contexto
-        Usuario usuario = new Usuario();
+        Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         Suporte suporte = SuporteMapper.fromDto(usuario, dto);
         Suporte newSuporte = this.service.save(suporte);
