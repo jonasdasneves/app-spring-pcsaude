@@ -44,7 +44,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers(HttpMethod.GET,"/error").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .requestMatchers("/api/alertas/**").hasAnyRole("USER", "PREMIUM")
                         .requestMatchers(HttpMethod.POST, "/api/medicoes").permitAll()
                         .requestMatchers("/api/medicoes/**").hasAnyRole("USER", "PREMIUM")

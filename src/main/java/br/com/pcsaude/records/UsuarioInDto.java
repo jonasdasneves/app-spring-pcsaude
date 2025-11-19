@@ -42,8 +42,5 @@ public record UsuarioInDto(
         @Enumerated(EnumType.STRING)
         ModeloTrabalhoEnum modeloTrabalho,
 
-        @Enumerated(EnumType.STRING)
-        Role role,
-
         String dispositivo_uuid
 ) {}

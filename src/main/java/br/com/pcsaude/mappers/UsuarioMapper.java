@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 public class UsuarioMapper {
     public static Usuario fromDto(Dispositivo dispositivo, UsuarioInDto dto){
         return new Usuario(
-                dto.role(),
+                null, //Role será USER
                 dto.nome(),
                 dto.email(),
                 dto.senha(),

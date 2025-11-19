@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     public void handleNoResourceFoundException(NoResourceFoundException e) {}
 
     @ExceptionHandler(UniqueKeyDuplicadaException.class)
-    public ResponseEntity<ErrorResponse> handleUniqueKeyDuplicadaException(ResourceNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleUniqueKeyDuplicadaException(UniqueKeyDuplicadaException e) {
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
