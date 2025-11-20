@@ -1,5 +1,6 @@
 package br.com.pcsaude.entities;
 
+import br.com.pcsaude.enums.PosturaEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -26,8 +27,9 @@ public class Medicao {
     @JoinColumn(name = "dispositivo_id", nullable = false)
     private Dispositivo dispositivo;
 
+    @Enumerated(EnumType.STRING)
     @Length(max = 50, message = "A descrição da postura deve ter no máximo 50 caracteres")
-    private String postura;
+    private PosturaEnum postura;
 
     @Min(value = 0, message = "O tempo sentado não pode ser negativo")
     @Max(value = 1440, message = "O tempo sentado deve ser menor que 1440 minutos (1 dia)")
@@ -59,7 +61,7 @@ public class Medicao {
     }
 
     public Medicao(Dispositivo dispositivo,
-                   String postura,
+                   PosturaEnum postura,
                    Integer tempoSentadoMin,
                    BigDecimal iluminacaoLux,
                    BigDecimal temperaturaC,

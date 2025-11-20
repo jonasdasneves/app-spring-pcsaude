@@ -1,5 +1,6 @@
 package br.com.pcsaude.records;
 
+import br.com.pcsaude.enums.PosturaEnum;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.Length;
 
@@ -13,7 +14,7 @@ public record MedicaoInDto(
         String uuidDispositivo,
 
         @Length(max = 50, message = "A descrição da postura deve ter no máximo 50 caracteres")
-        String postura,
+        PosturaEnum postura,
 
         @Min(value = 0, message = "O tempo sentado não pode ser negativo")
         @Max(value = 1440, message = "O tempo sentado deve ser menor que 1440 minutos (1 dia)")
