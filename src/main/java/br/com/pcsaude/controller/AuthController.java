@@ -23,6 +23,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
 @RequestMapping("api/auth")
 public class AuthController {
@@ -37,8 +42,13 @@ public class AuthController {
         this.usuarioService = usuarioService;
     }
 
+    @Operation(summary = "Login", description = "Autentica o usuário e retorna um token JWT.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Autenticação bem sucedida"),
+            @ApiResponse(responseCode = "400", description = "Requisição inválida ou dados de login incorretos")
+    })
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+    public ResponseEntity<AuthResponse> login(@Parameter(description = "Dados de login (email e senha)", required = true) @Valid @RequestBody LoginRequest request) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password())
         );
@@ -53,8 +63,13 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Cadastrar usuário", description = "Cria um novo usuário associado a um dispositivo (por UUID). Retorna o usuário criado.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Usuário criado com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos para cadastro")
+    })
     @PostMapping("/cadastrar")
-    public ResponseEntity<UsuarioOutDto> cadastrar(@Valid @RequestBody UsuarioInDto dto) {
+    public ResponseEntity<UsuarioOutDto> cadastrar(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do usuário a ser cadastrado", required = true) @Valid @RequestBody UsuarioInDto dto) {
 
         Dispositivo dispositivo = new Dispositivo(dto.dispositivo_uuid());
 

@@ -10,6 +10,10 @@ import br.com.pcsaude.records.SuporteOutDto;
 import br.com.pcsaude.security.CustomUserDetails;
 import br.com.pcsaude.services.SuporteService;
 import br.com.pcsaude.services.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +30,27 @@ public class SuporteController {
         this.service = service;
     }
 
+    @Operation(summary = "Buscar suporte por id", description = "Retorna um pedido de suporte pelo id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Suporte encontrado"),
+            @ApiResponse(responseCode = "404", description = "Suporte não encontrado")
+    })
     @GetMapping("/{id}")
-    public ResponseEntity<SuporteOutDto> findById(@PathVariable Long id) {
+    public ResponseEntity<SuporteOutDto> findById(@Parameter(description = "Id do suporte", required = true) @PathVariable Long id) {
         Suporte suporte = this.service.findById(id);
         SuporteOutDto suporteOutDto = SuporteMapper.toDto(suporte);
         return ResponseEntity.ok(suporteOutDto);
     }
 
+    @Operation(summary = "Listar suportes do usuário", description = "Retorna uma página com os suportes do usuário autenticado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Página retornada"),
+            @ApiResponse(responseCode = "204", description = "Sem conteúdo")
+    })
     @GetMapping
     public ResponseEntity<Page<SuporteOutDto>> findAll(
-            @RequestParam(required = false, defaultValue = "0") int page,
-            @RequestParam(required = false, defaultValue = "10") int size) {
+            @Parameter(description = "Página (0-based)") @RequestParam(required = false, defaultValue = "0") int page,
+            @Parameter(description = "Tamanho da página") @RequestParam(required = false, defaultValue = "10") int size) {
 
         Page<SuporteOutDto> pagina = this.service
                 .findAll(page, size)
@@ -50,8 +64,13 @@ public class SuporteController {
         }
     }
 
+    @Operation(summary = "Criar solicitação de suporte", description = "Cria um novo pedido de suporte para o usuário autenticado")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Suporte criado"),
+            @ApiResponse(responseCode = "400", description = "Dados inválidos")
+    })
     @PostMapping
-    public ResponseEntity<SuporteOutDto> save(@Valid @RequestBody SuporteInDto dto) {
+    public ResponseEntity<SuporteOutDto> save(@io.swagger.v3.oas.annotations.parameters.RequestBody(description = "Dados do suporte", required = true) @Valid @RequestBody SuporteInDto dto) {
 
         Usuario usuario = (Usuario) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -62,8 +81,13 @@ public class SuporteController {
         return ResponseEntity.ok(novoSuporte);
     }
 
+    @Operation(summary = "Cancelar suporte", description = "Cancela um pedido de suporte pelo id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Suporte cancelado"),
+            @ApiResponse(responseCode = "404", description = "Suporte não encontrado")
+    })
     @PutMapping("/{id}")
-    public ResponseEntity<SuporteOutDto> cancelar(@PathVariable Long id) {
+    public ResponseEntity<SuporteOutDto> cancelar(@Parameter(description = "Id do suporte", required = true) @PathVariable Long id) {
         Suporte suporteAtualizado = this.service.cancelar(id);
         SuporteOutDto suporteCancelado = SuporteMapper.toDto(suporteAtualizado);
 
